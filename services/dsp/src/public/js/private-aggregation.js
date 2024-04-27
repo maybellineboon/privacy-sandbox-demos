@@ -1,14 +1,13 @@
 let bucket = document.currentScript.getAttribute('bucket');
 let cloudEnv = document.currentScript.getAttribute('cloudenv');
 
-sharedStorage.set("bucket", `${bucket}`);
-sharedStorage.set("cloudenv", `${cloudEnv}`);
+sharedStorage.set('bucket', `${bucket}`);
+sharedStorage.set('cloudenv', `${cloudEnv}`);
 
 async function runPrivateAggregation() {
   const privateAggCloud = {
     'privateAggregationConfig': {
-      'aggregationCoordinatorOrigin':
-        `https://publickeyservice.msmt.${cloudEnv}.privacysandboxservices.com`,
+      'aggregationCoordinatorOrigin': `https://publickeyservice.msmt.${cloudEnv}.privacysandboxservices.com`,
     },
   };
   await window.sharedStorage.worklet.addModule(

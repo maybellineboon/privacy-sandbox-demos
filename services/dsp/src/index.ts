@@ -16,7 +16,7 @@
 
 // DSP
 import express, {Application, Request, Response} from 'express';
-import { appendFile, readFileSync, existsSync, writeFile } from 'fs';
+import {appendFile, readFileSync, existsSync, writeFile} from 'fs';
 import cbor from 'cbor';
 import {decodeDict} from 'structured-field-values';
 import {
@@ -425,27 +425,33 @@ app.post(
     console.log(`---------------------------------------`);
     let reportEnv = aggregationReport.aggregation_coordinator_origin;
     // aggregationReport = JSON.stringify(aggregationReport)
-    if(reportEnv == 'https://publickeyservice.msmt.aws.privacysandboxservices.com'){
+    if (
+      reportEnv ==
+      'https://publickeyservice.msmt.aws.privacysandboxservices.com'
+    ) {
       reportName = `aws-${reportName}.json`;
     }
-    if(reportEnv == 'https://publickeyservice.msmt.gcp.privacysandboxservices.com'){
+    if (
+      reportEnv ==
+      'https://publickeyservice.msmt.gcp.privacysandboxservices.com'
+    ) {
       reportName = `gcp-${reportName}.json`;
     }
 
-    let fileContent = []
-    if(existsSync(reportName)){
+    let fileContent = [];
+    if (existsSync(reportName)) {
       let file = readFileSync(reportName).toString();
       fileContent = JSON.parse(file);
     }
 
-    fileContent.push(aggregationReport)
+    fileContent.push(aggregationReport);
 
-    writeFile(reportName, `${JSON.stringify(fileContent)}`, function(e){
-      if(e){
+    writeFile(reportName, `${JSON.stringify(fileContent)}`, function (e) {
+      if (e) {
         console.log(e);
       }
     });
-    
+
     res.sendStatus(200);
   },
 );
@@ -484,23 +490,29 @@ app.post(
     console.log(`---------------------------------------`);
     let reportEnv = aggregationReport.aggregation_coordinator_origin;
     // aggregationReport = JSON.stringify(aggregationReport);
-    if(reportEnv == 'https://publickeyservice.msmt.aws.privacysandboxservices.com'){
+    if (
+      reportEnv ==
+      'https://publickeyservice.msmt.aws.privacysandboxservices.com'
+    ) {
       reportName = `debug-aws-${reportName}.json`;
     }
-    if(reportEnv == 'https://publickeyservice.msmt.gcp.privacysandboxservices.com'){
+    if (
+      reportEnv ==
+      'https://publickeyservice.msmt.gcp.privacysandboxservices.com'
+    ) {
       reportName = `debug-gcp-${reportName}.json`;
     }
 
-    let fileContent = []
-    if(existsSync(reportName)){
+    let fileContent = [];
+    if (existsSync(reportName)) {
       let file = readFileSync(reportName).toString();
       fileContent = JSON.parse(file);
     }
 
-    fileContent.push(aggregationReport)
+    fileContent.push(aggregationReport);
 
-    writeFile(reportName, `${JSON.stringify(fileContent)}`, function(e){
-      if(e){
+    writeFile(reportName, `${JSON.stringify(fileContent)}`, function (e) {
+      if (e) {
         console.log(e);
       }
     });

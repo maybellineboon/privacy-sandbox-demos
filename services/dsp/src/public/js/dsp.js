@@ -7,7 +7,7 @@ window.addEventListener('load', (event) => {
   //   iframe.src = `https://${dsp}/private-aggregation-${cloudEnv}?bucket=${bucket}`;
   //   document.body.appendChild(iframe);
   // }
-  if((cloudEnv == 'aws' || cloudEnv == 'gcp') && bucket != "undefined"){
+  if ((cloudEnv == 'aws' || cloudEnv == 'gcp') && bucket != 'undefined') {
     let iframe = document.createElement('iframe');
     iframe.src = `https://${dsp}/private-aggregation?bucket=${bucket}&cloudEnv=${cloudEnv}`;
     document.body.appendChild(iframe);
