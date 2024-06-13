@@ -16,6 +16,7 @@
 
 // DSP
 import express, {Application, Request, Response} from 'express';
+import {appendFile, readFileSync, existsSync, writeFile} from 'fs';
 import cbor from 'cbor';
 import {decodeDict} from 'structured-field-values';
 import {
@@ -415,7 +416,41 @@ app.post(
     );
 
     let aggregationReport = req.body;
-    console.log(req.body);
+    // console.log(req.body);
+
+    let timeStr = new Date().toISOString();
+
+    let date = new Date();
+    let reportName = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}`;
+    console.log(`---------------------------------------`);
+    let reportEnv = aggregationReport.aggregation_coordinator_origin;
+    // aggregationReport = JSON.stringify(aggregationReport)
+    if (
+      reportEnv ==
+      'https://publickeyservice.msmt.aws.privacysandboxservices.com'
+    ) {
+      reportName = `aws-${reportName}.json`;
+    }
+    if (
+      reportEnv ==
+      'https://publickeyservice.msmt.gcp.privacysandboxservices.com'
+    ) {
+      reportName = `gcp-${reportName}.json`;
+    }
+
+    let fileContent = [];
+    if (existsSync(reportName)) {
+      let file = readFileSync(reportName).toString();
+      fileContent = JSON.parse(file);
+    }
+
+    fileContent.push(aggregationReport);
+
+    writeFile(reportName, `${JSON.stringify(fileContent)}`, function (e) {
+      if (e) {
+        console.log(e);
+      }
+    });
 
     res.sendStatus(200);
   },
@@ -425,6 +460,15 @@ app.get('/private-aggregation-aws', (req, res) => {
   res.render('private-aggregation-aws');
 });
 
+app.get('/private-aggregation', (req, res) => {
+  const bucket = req.query.bucket;
+  const cloudEnv = req.query.cloudEnv;
+  res.render('private-aggregation', {
+    bucket: bucket,
+    cloudEnv: cloudEnv,
+  });
+});
+
 app.get('/private-aggregation-gcp', (req, res) => {
   res.render('private-aggregation-gcp');
 });
@@ -432,14 +476,46 @@ app.get('/private-aggregation-gcp', (req, res) => {
 app.post(
   '/.well-known/private-aggregation/debug/report-shared-storage',
   (req, res) => {
-    let timeStr = new Date().toISOString();
     console.log(
       `Private Aggregation for Shared Storage - Received Aggregatable Report on debug endpoint`,
     );
 
     let aggregationReport = req.body;
+    // console.log(req.body);
 
-    console.log(aggregationReport);
+    let timeStr = new Date().toISOString();
+
+    let date = new Date();
+    let reportName = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}-${date.getHours()}`;
+    console.log(`---------------------------------------`);
+    let reportEnv = aggregationReport.aggregation_coordinator_origin;
+    // aggregationReport = JSON.stringify(aggregationReport);
+    if (
+      reportEnv ==
+      'https://publickeyservice.msmt.aws.privacysandboxservices.com'
+    ) {
+      reportName = `debug-aws-${reportName}.json`;
+    }
+    if (
+      reportEnv ==
+      'https://publickeyservice.msmt.gcp.privacysandboxservices.com'
+    ) {
+      reportName = `debug-gcp-${reportName}.json`;
+    }
+
+    let fileContent = [];
+    if (existsSync(reportName)) {
+      let file = readFileSync(reportName).toString();
+      fileContent = JSON.parse(file);
+    }
+
+    fileContent.push(aggregationReport);
+
+    writeFile(reportName, `${JSON.stringify(fileContent)}`, function (e) {
+      if (e) {
+        console.log(e);
+      }
+    });
 
     res.sendStatus(200);
   },
